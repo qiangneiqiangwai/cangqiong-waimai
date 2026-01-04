@@ -138,6 +138,27 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
 
+    public Employee getById(Long id) {
+        Employee employee = employeeMapper.getById(id);
+        employee.setPassword("****");
+
+        return employee;
+    }
+
+    /**
+     * 编辑员工信息
+     *
+     * @param employeeDTO
+     */
+    public void update(EmployeeDTO employeeDTO) {
+        Employee employee = new Employee();
+        BeanUtils.copyProperties(employeeDTO, employee);
+
+        employee.setUpdateTime(LocalDateTime.now());// 获取当前的服务器系统时间，作为该记录的最后修改时间。
+        employee.setUpdateUser(BaseContext.getCurrentId());//从 ThreadLocal 取出ID  JWT 令牌中解析出了当前登录人的 ID 并存入了 BaseContext
+
+        employeeMapper.update(employee);
+    }
 
 
 }
